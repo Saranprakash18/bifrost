@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - BIFROST</title>
+    <link rel="stylesheet" href="{%static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    {% load static %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <script>
+            setTimeout(() => {
+            const messages = document.querySelectorAll('.messages');
+            messages.forEach(el => el.style.display = 'none');
+            }, 3000);
+        </script>
+
+        <style>
+            .messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            }
+
+            .alert {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-family: sans-serif;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            animation: fadein 0.3s ease-in-out;
+            }
+
+            .alert.error {
+            background-color: #f44336;
+            }
+
+            @keyframes fadein {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+            }
+        </style>
+    {% endif %}
+
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <h1>BIFROST</h1>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a>
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile' %}" style="text-decoration: none;" class="route-link">
+                            <i class="fas fa-user"></i>
+                            <span>profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'history' %}" style="text-decoration: none;" class="route-link">
+                            <i class="fas fa-history"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'templates' %}" style="text-decoration: none;" class="route-link">
+                            <i class="fas fa-star"></i>
+                            <span>Templates</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'help' %}" style="text-decoration: none;" class="route-link">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="{% url 'profile' %}" class="signout-btn" style="text-decoration: none;">
+                    <div class="user-profile">
+                        <div class="avatar">
+                            <img src="{%static 'images/user-avatar.jpg'%}" alt="User Avatar">
+                        </div>
+                        <div class="user-info">
+                            <h4>{{ user.get_full_name|default:user.username }}</h4>
+                            <p>{{user.get_email|default:user.email}}</p>
+                        </div>
+                        <i class="fas fa-user"></i>
+                    </div>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="main-header">
+                <h2>Dashboard</h2>
+            </header>
+            
+            <div class="content-wrapper">
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+                    <div class="welcome-content">
+                        <h3>Welcome, {{user.get_full_name|default:user.username}}</h3>
+                        <p>Ready to convert some UI screenshots into clean code? Upload an image to get started.</p>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> New Project
+                        </button>
+                    </div>
+                    <div class="welcome-image">
+                        <img src="{%static 'images/dashboard_main.jpg'%}" alt="Welcome to BIFROST">
+                    </div>
+                </section>
+                
+                <!-- Upload Section -->
+                <section class="upload-section">
+                        <div class="upload-card">
+                            <div class="upload-header">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <h4>Upload UI Screenshot</h4>
+                            </div>
+                            <div class="upload-body">
+                                <div class="dropzone" id="dropzone">
+                                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                                    <i class="fas fa-image"></i>
+                                    <p>Drag & drop your UI screenshot here or click to browse</p>
+                                    <button class="btn btn-outline">Select File</button>
+                                </div>
+                                <div class="file-info" id="fileInfo" style="display: none;">
+                                    <div class="file-preview">
+                                        <img id="filePreview" src="#" alt="Preview">
+                                    </div>
+                                    <div class="file-details">
+                                        <h5 id="fileName"></h5>
+                                        <p id="fileSize"></p>
+                                        <button class="btn btn-danger" id="removeFile">Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="options-card">
+                            <div class="options-header">
+                                <h4>Conversion Options</h4>
+                            </div>
+                            <div class="options-body">
+                                <div class="form-group">
+                                    <label for="framework">Framework</label>
+                                    <select id="framework" class="form-control">
+                                        <option value="html">Plain HTML/CSS/JS</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="outputType">Output Type</label>
+                                    <select id="outputType" class="form-control">
+                                        <option value="full">Full Page</option>
+                                        <option value="component">Component Only</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cssType">CSS Type</label>
+                                    <select id="cssType" class="form-control">
+                                        <option value="regular">Regular CSS</option>
+                                        <option value="tailwind">Tailwind CSS</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    
+                </section>
+                
+                <!-- Generate Button -->
+                <div class="generate-section">
+                    <a href="{% url 'result' %}" >
+                        <button class="btn btn-primary btn-large" id="generateBtn" disabled>
+                            <i class="fas fa-bolt"></i> Generate Code
+                        </button>
+                    </a>    
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>

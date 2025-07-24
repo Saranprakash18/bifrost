@@ -1,0 +1,177 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIFROST - Convert Image to Code</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="hero-header">
+        <nav class="navbar">
+            <div class="logo">
+                <span class="logo-icon">⚡</span>
+                <h1>BIFROST</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#tech">Technology</a>
+                <a href="/login/" class="btn btn-outline">Login</a>
+                <a href="/signup/" class="btn btn-primary">Sign Up</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+        
+        <div class="mobile-menu">
+            <a href="#about">About</a>
+            <a href="#tech">Technology</a>
+            <a href="/login/">Login</a>
+            <a href="/signup/">Sign Up</a>
+        </div>
+
+        <div class="hero-content">
+            <h1>Transform UI Image into <span>Frontend Code</span></h1>
+            <p>BIFROST bridges the gap between design and development by converting your UI images directly into production-ready frontend code.</p>
+            <div class="hero-buttons">
+                <a href="/signup/" class="btn btn-primary btn-large">Get Started</a>
+                <a href="#demo" class="btn btn-outline btn-large">See Demo</a>
+            </div>
+        </div>
+        
+        <div class="hero-image">
+            <img src="{% static 'images/main.jpg' %}" alt="BIFROST converting image to code">
+        </div>
+    </header>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About BIFROST</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>BIFROST is an innovative web application that leverages computer vision and machine learning to transform UI screenshots into actual frontend code. Designed for developers, designers, and product managers, it dramatically reduces the time between design and implementation.</p>
+                    <p>Simply upload your UI image, and BIFROST will generate clean HTML, CSS, and JavaScript code that you can directly use in your projects or further customize as needed.</p>
+                </div>
+                <div class="about-image">
+                    <img src="{% static 'images/work.jpg' %}" alt="How BIFROST works">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" class="tech-section">
+        <div class="container">
+            <h2 class="section-title">Tech Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fab fa-html5"></i>
+                    </div>
+                    <h3>Frontend</h3>
+                    <p>HTML5, CSS3, JavaScript with responsive design principles for all devices</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h3>Backend</h3>
+                    <p>Python with Django framework for robust server-side processing</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Computer Vision</h3>
+                    <p>OpenCV for image processing and Tesseract for OCR capabilities</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Components</h3>
+                    <p>Machine learning models for element detection and code generation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2 class="section-title">See BIFROST in Action</h2>
+            <div class="demo-container">
+                <div class="demo-step">
+                    <div class="step-number">1</div>
+                    <h3>Upload Screenshot</h3>
+                    <p>Drag and drop or select your UI screenshot</p>
+                </div>
+                <div class="demo-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="demo-step">
+                    <div class="step-number">2</div>
+                    <h3>Processing</h3>
+                    <p>BIFROST analyzes the image structure</p>
+                </div>
+                <div class="demo-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="demo-step">
+                    <div class="step-number">3</div>
+                    <h3>Get Code</h3>
+                    <p>Download clean, production-ready frontend code</p>
+                </div>
+            </div>
+            <!-- Video Trigger -->
+            <div class="demo-video">
+                <video controls autoplay style="width: 80%;">
+                    <source src="{% static 'videos/demo.mp4' %}" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <span class="logo-icon">⚡</span>
+                        <h2>BIFROST</h2>
+                    </div>
+                    <p>Bridging the gap between design and development</p>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#tech">Technology</a></li>
+                        <li><a href="#demo">Demo</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href=" {% url 'signup'%}">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> bifrost@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> +91 12345-67890</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; made by bifrost</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

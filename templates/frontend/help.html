@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help | BIFROST</title>
+    <link rel="stylesheet" href="{% static 'css/help.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <a href="{% url 'dashboard' %}">
+                <button style="
+                    background-color: #6c5ce7;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    transition: background-color 0.3s ease, transform 0.2s ease;">
+                    Back
+                </button>
+            </a>
+        </div>
+    </header>
+    <main class="help-container">
+        <div class="container">
+            <h1 class="help-title">Welcome to Bifrost Help Center</h1>
+            <p class="help-subtitle">Get started with transforming your UI designs into clean frontend code</p>
+            
+            <div class="help-sections">
+                <section class="help-section">
+                    <h2><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h2>
+                    <div class="help-content">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Default Templates</h3>
+                                <p>Your dashboard includes several default templates you can use immediately. Click on any template to see the generated code.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Upload New Design</h3>
+                                <p>Click the "Upload" button to convert your own UI screenshots into code.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="help-section">
+                    <h2><i class="fas fa-upload"></i> Uploading Your Design</h2>
+                    <div class="help-content">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Prepare Your Screenshot</h3>
+                                <p>Capture a clear screenshot of your UI design. For best results, make sure the screenshot is high-quality and all elements are visible.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Upload the File</h3>
+                                <p>Click the "Upload" button in your dashboard, select your screenshot file, and wait for Bifrost to process it.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>View Results</h3>
+                                <p>After processing, you'll be redirected to the results page with your generated HTML, CSS, and JavaScript code.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="help-section">
+                    <h2><i class="fas fa-code"></i> Working with Generated Code</h2>
+                    <div class="help-content">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Code Preview</h3>
+                                <p>The results page shows your code in organized tabs for HTML, CSS, and JavaScript. You can switch between them to view each part.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Copy Code</h3>
+                                <p>Click the "Copy" button next to each code section to copy it to your clipboard for use in your project.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Download Code</h3>
+                                <p>Use the "Download" button to save the complete code as a ZIP file containing all necessary files.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="help-section faq-section">
+                    <h2><i class="fas fa-question-circle"></i>Here clear Your Doubts!</h2>
+                    <div class="faq-content">
+                        <div class="faq-item">
+                            <button class="faq-question">What image formats does Bifrost support?<i class="fas fa-chevron-down"></i></button>
+                            <div class="faq-answer">
+                                <p>Bifrost supports JPG, PNG, and WebP formats. For best results, use PNG files with clear contrast.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">How accurate is the generated code?<i class="fas fa-chevron-down"></i></button>
+                            <div class="faq-answer">
+                                <p>Bifrost currently low level accuracy, we have to improve the ai model</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Can I edit the generated code?<i class="fas fa-chevron-down"></i></button>
+                            <div class="faq-answer">
+                                <p>Yes! The code is fully editable. You can modify it directly in the code preview or after copying/downloading.</p>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question">Is there a limit to how many designs I can convert?<i class="fas fa-chevron-down"></i></button>
+                            <div class="faq-answer">
+                                <p>This is open source plateform so There is No limit.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Bifrost - AI-Powered UI to Code Converter.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'js/help.js' %}"></script>
+</body>
+</html>

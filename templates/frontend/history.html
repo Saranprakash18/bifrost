@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History | BIFROST</title>
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'dashboard' %}">
+                <button style="
+                    background-color: #6c5ce7;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    transition: background-color 0.3s ease, transform 0.2s ease;">
+                    Back
+                </button>
+            </a>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search history...">
+                <button id="searchButton" class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="history-container">
+        <h1>Project History</h1>
+        
+        <div class="history-cards">
+            <!-- History cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+
+</body>
+</html>

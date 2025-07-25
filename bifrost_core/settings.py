@@ -10,13 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-from decouple import config
-
-
-
-
 import os
+from decouple import config
+from dotenv import load_dotenv
 from pathlib import Path
+
+
+
+load_dotenv()
+import cloudinary
+
+
+CLOUD_NAME = os.getenv('CLOUD_NAME')
+CLOUD_API_KEY = os.getenv('CLOUD_API_KEY')
+CLOUD_API_SECRET = os.getenv('CLOUD_API_SECRET')
+
+cloudinary.config( 
+  cloud_name = CLOUD_NAME, 
+  api_key = CLOUD_API_KEY, 
+  api_secret = CLOUD_API_SECRET 
+)
 
 # DEBUG = config('DEBUG', default=False, cast=bool)
 # SECRET_KEY = config('SECRET_KEY')
@@ -30,7 +43,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8(q*k=ourbgty6wu)sc_)&ei!i3ssa$$yzy8kzmf$)vf-#+x&)'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -49,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bifrost',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

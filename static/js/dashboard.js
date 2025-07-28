@@ -91,23 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
         generateBtn.disabled = true;
     });
     
-    // Generate code button
-    generateBtn.addEventListener('click', function() {
-        // In a real implementation, this would send the image to the backend
-        // and process it to generate code
-        
-        // Show loading state
-        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        this.disabled = true;
-        
-        // Simulate processing delay
-        setTimeout(function() {
-            alert('Code generation complete! In a full implementation, this would show the generated code or download options.');
-            generateBtn.innerHTML = '<i class="fas fa-bolt"></i> Generate Code';
-            generateBtn.disabled = false;
-        }, 2000);
-    });
-    
     // Mobile menu toggle (for smaller screens)
     const mobileMenuBtn = document.createElement('button');
     mobileMenuBtn.className = 'mobile-menu-btn';

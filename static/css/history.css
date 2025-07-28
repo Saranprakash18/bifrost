@@ -1,155 +1,236 @@
-* {
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background-color: #f5f5f5;
-    color: #333;
     line-height: 1.6;
 }
 
-/* Navbar styles */
-.navbar {
-    background-color: white;
-    color: white;
-    padding: 1rem 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.history-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
 }
 
-.navbar-container {
+/* Header styles */
+.history-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.nav-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
+.history-header h1 {
+    color: #1e293b;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.75rem;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.75rem;
 }
 
-.nav-button:hover {
-    background-color: #2980b9;
+.history-header h1 i {
+    color: #6366f1;
 }
 
-.search-container {
-    display: flex;
-    align-items: center;
-    width: 50%;
-    max-width: 400px;
+.history-stats {
+    background: #e0e7ff;
+    color: #4f46e5;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 500;
+    font-size: 0.875rem;
 }
 
-#searchInput {
-    width: 100%;
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
-    font-size: 14px;
-    outline: none;
-}
-
-.search-button {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.search-button:hover {
-    background-color: #2980b9;
-}
-
-/* Main content styles */
-.history-container {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 20px;
-}
-
-.history-container h1 {
-    text-align: center;
-    margin-bottom: 2rem;
-    color: #2c3e50;
-}
-
-.history-cards {
+/* Grid layout */
+.history-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.75rem;
 }
 
+/* Card styles */
 .history-card {
-    background-color: white;
-    border-radius: 8px;
+    background: white;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 320px;
+    position: relative;
 }
 
 .history-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .card-image {
+    height: 70%;
     width: 100%;
-    height: 200px;
+    position: relative;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-.card-content {
-    padding: 15px;
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 100%);
+    transition: all 0.3s ease;
 }
 
-.card-title {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #2c3e50;
+.history-card:hover .card-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%);
 }
 
-.card-description {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 15px;
+.history-card:hover .card-image img {
+    transform: scale(1.05);
 }
 
-.card-timestamp {
-    font-size: 12px;
-    color: #999;
+.card-details {
+    height: 30%;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+}
+
+.detail-group {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 0.75rem;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.5rem;
+}
+
+.detail-label i {
+    font-size: 0.9rem;
+}
+
+.detail-value {
+    color: #1e293b;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.card-actions {
+    margin-top: 0.5rem;
+}
+
+.view-btn {
+    background: #e0e7ff;
+    color: #4f46e5;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.view-btn:hover {
+    background: #c7d2fe;
+}
+
+/* Empty state styles */
+.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    text-align: center;
+}
+
+.empty-content {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-icon {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+.empty-state h2 {
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+}
+
+.empty-state p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s ease;
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .navbar-container {
+    .history-header {
         flex-direction: column;
-        gap: 10px;
+        align-items: flex-start;
+        gap: 1rem;
     }
     
-    .search-container {
-        width: 100%;
+    .history-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
     
-    .history-cards {
+    .history-card {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .history-grid {
         grid-template-columns: 1fr;
     }
 }

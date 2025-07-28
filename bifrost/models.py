@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.contrib.auth.models import User
+import uuid
+from django.utils.html import format_html
 
 class CustomerUser(models.Model):
     full_name = models.CharField(max_length=100)
@@ -33,3 +36,35 @@ class LoginSession(models.Model):
 
     def __str__(self):
         return f"Session {self.session_key} for User {self.user_id}"
+    
+
+
+class UploadHistory(models.Model):
+    FRAMEWORK_CHOICES = [
+        ('vanilla', 'Plain HTML/CSS/JS'),
+        ('bootstrap', 'Bootstrap'),
+        ('tailwind', 'Tailwind CSS'),
+    ]
+    
+    CSS_STYLE_CHOICES = [
+        ('inline', 'Inline Styles'),
+        ('external', 'External CSS'),
+        ('css_modules', 'CSS Modules'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cloud_image_url = models.URLField(max_length=500)
+    framework_type = models.CharField(max_length=50, choices=FRAMEWORK_CHOICES, default='vanilla')
+    css_style = models.CharField(max_length=50, choices=CSS_STYLE_CHOICES, default='external')
+    created_at = models.DateTimeField(auto_now_add=True)
+    html_code = models.TextField()
+    css_code = models.TextField()
+    js_code = models.TextField()
+    ocr_text = models.TextField()
+
+    def __str__(self):
+        return f"{self.user.username}'s upload on {self.created_at.strftime('%Y-%m-%d')}"
+
+    def uploaded_image_display(self):
+        return format_html('<img src="{}" width="100" style="border:1px solid #ddd"/>', self.cloud_image_url)
+    uploaded_image_display.short_description = 'Uploaded Image'

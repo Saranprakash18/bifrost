@@ -9,39 +9,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="navbar-container">
-            <a href="{% url 'dashboard' %}">
-                <button style="
-                    background-color: #6c5ce7;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    transition: background-color 0.3s ease, transform 0.2s ease;">
-                    Back
-                </button>
-            </a>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search history...">
-                <button id="searchButton" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
+    <div class="history-container">
+        <div class="history-header">
+            <h1><i class="fas fa-history"></i> Conversion History</h1>
+            <div class="history-stats">
+                <span>{{ uploads.count }} conversion{{ uploads.count|pluralize }}</span>
             </div>
         </div>
-    </header>
-
-    <main class="history-container">
-        <h1>Project History</h1>
         
-        <div class="history-cards">
-            <!-- History cards will be dynamically inserted here -->
+        {% if has_uploads %}
+        <div class="history-grid">
+            {% for upload in uploads %}
+            <div class="history-card" data-upload-id="{{ upload.id }}">
+                <div class="card-image">
+                    <img src="{{ upload.cloud_image_url }}" alt="Uploaded design" loading="lazy">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-group">
+                        <span class="detail-label"><i class="fas fa-cube"></i> Framework</span>
+                        <span class="detail-value">{{ upload.get_framework_type_display }}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label"><i class="fas fa-paint-brush"></i> Style</span>
+                        <span class="detail-value">{{ upload.get_css_style_display }}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label"><i class="far fa-clock"></i> Converted</span>
+                        <span class="detail-value">{{ upload.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="view-btn">View Result</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-    </main>
-
-
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-content">
+                <img src="{% static 'history/empty.svg' %}" alt="No uploads yet" class="empty-icon">
+                <h2>Your history is empty</h2>
+                <p>Convert your first design and it will appear here</p>
+                <a href="/dashboard" class="btn-primary">Start Converting</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <script src="{% static 'js/history.js' %}"></script>
 </body>
 </html>

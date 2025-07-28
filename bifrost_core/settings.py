@@ -21,15 +21,10 @@ load_dotenv()
 import cloudinary
 
 
-CLOUD_NAME = os.getenv('CLOUD_NAME')
-CLOUD_API_KEY = os.getenv('CLOUD_API_KEY')
-CLOUD_API_SECRET = os.getenv('CLOUD_API_SECRET')
+CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
+CLOUD_API_KEY = os.getenv('CLOUDINARY_API_KEY')
+CLOUD_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
 
-cloudinary.config( 
-  cloud_name = CLOUD_NAME, 
-  api_key = CLOUD_API_KEY, 
-  api_secret = CLOUD_API_SECRET 
-)
 
 # DEBUG = config('DEBUG', default=False, cast=bool)
 # SECRET_KEY = config('SECRET_KEY')
@@ -63,7 +58,6 @@ INSTALLED_APPS = [
     'bifrost',
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,6 +67,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+INSTALLED_APPS += [
+    'cloudinary',
+    'cloudinary_storage',
+]
+
+cloudinary.config( 
+  cloud_name = CLOUD_NAME, 
+  api_key = CLOUD_API_KEY, 
+  api_secret = CLOUD_API_SECRET 
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 ROOT_URLCONF = 'bifrost_core.urls'
 

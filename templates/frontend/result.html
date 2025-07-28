@@ -9,28 +9,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="navbar-container">
-            <a href="{% url 'dashboard' %}">
-                <button style="
-                    background-color: #6c5ce7;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    transition: background-color 0.3s ease, transform 0.2s ease;">
-                    Back
-                </button>
-            </a>
+    <div class="result-container">
+        <div class="original-image">
+            <h2>Original Design</h2>
+            <img src="{{ image_url }}" alt="Uploaded design" class="preview-image">
         </div>
-    </header>
 
-    <main class="templates-container">
-        <h1>Result Page</h1>
-    </main>
+        <div class="code-section">
+            <div class="code-tabs">
+                <button class="tab-btn active" data-tab="html">HTML</button>
+                <button class="tab-btn" data-tab="css">CSS</button>
+                <button class="tab-btn" data-tab="js">JavaScript</button>
+            </div>
+
+            <div class="code-content">
+                <div id="html" class="tab-content active">
+                    <pre><code class="language-html">{{ html_code }}</code></pre>
+                </div>
+                <div id="css" class="tab-content">
+                    <pre><code class="language-css">{{ css_code }}</code></pre>
+                </div>
+                <div id="js" class="tab-content">
+                    <pre><code class="language-js">{{ js_code }}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="copy-html" class="copy-btn">Copy HTML</button>
+            <button id="copy-css" class="copy-btn">Copy CSS</button>
+            <button id="copy-js" class="copy-btn">Copy JS</button>
+            <a href="/dashboard" class="btn-primary">Convert Another</a>
+        </div>
+    </div>
+
+    <script>
+    // Tab switching functionality
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Copy buttons functionality
+    document.getElementById('copy-html').addEventListener('click', () => {
+        copyToClipboard('{{ html_code|escapejs }}');
+    });
+
+    document.getElementById('copy-css').addEventListener('click', () => {
+        copyToClipboard('{{ css_code|escapejs }}');
+    });
+
+    document.getElementById('copy-js').addEventListener('click', () => {
+        copyToClipboard('{{ js_code|escapejs }}');
+    });
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Code copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+    </script>
 
 </body>
 </html>

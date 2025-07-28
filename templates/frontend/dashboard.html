@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - BIFROST</title>
     <link rel="stylesheet" href="{%static 'css/dashboard.css' %}">
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -140,7 +141,10 @@
                 </section>
                 
                 <!-- Upload Section -->
-                <section class="upload-section">
+                <form action="{% url 'handle_upload' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <section class="upload-section">
                         <div class="upload-card">
                             <div class="upload-header">
                                 <i class="fas fa-cloud-upload-alt"></i>
@@ -148,10 +152,10 @@
                             </div>
                             <div class="upload-body">
                                 <div class="dropzone" id="dropzone">
-                                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                                    <input type="file" name="image" id="fileInput" accept="image/*" style="display: none;" required>
                                     <i class="fas fa-image"></i>
                                     <p>Drag & drop your UI screenshot here or click to browse</p>
-                                    <button class="btn btn-outline">Select File</button>
+                                    <button type="button" class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Select File</button>
                                 </div>
                                 <div class="file-info" id="fileInfo" style="display: none;">
                                     <div class="file-preview">
@@ -160,12 +164,12 @@
                                     <div class="file-details">
                                         <h5 id="fileName"></h5>
                                         <p id="fileSize"></p>
-                                        <button class="btn btn-danger" id="removeFile">Remove</button>
+                                        <button type="button" class="btn btn-danger" id="removeFile">Remove</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="options-card">
                             <div class="options-header">
                                 <h4>Conversion Options</h4>
@@ -173,38 +177,35 @@
                             <div class="options-body">
                                 <div class="form-group">
                                     <label for="framework">Framework</label>
-                                    <select id="framework" class="form-control">
+                                    <select id="framework" name="framework" class="form-control">
                                         <option value="html">Plain HTML/CSS/JS</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="outputType">Output Type</label>
-                                    <select id="outputType" class="form-control">
+                                    <select id="outputType" name="output_type" class="form-control">
                                         <option value="full">Full Page</option>
                                         <option value="component">Component Only</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="cssType">CSS Type</label>
-                                    <select id="cssType" class="form-control">
+                                    <select id="cssType" name="css_type" class="form-control">
                                         <option value="regular">Regular CSS</option>
                                         <option value="tailwind">Tailwind CSS</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
+                    </section>
 
-                    
-                </section>
-                
-                <!-- Generate Button -->
-                <div class="generate-section">
-                    <a href="{% url 'result' %}" >
-                        <button class="btn btn-primary btn-large" id="generateBtn" disabled>
+                    <!-- Generate Button -->
+                    <div class="generate-section">
+                        <button type="submit" class="btn btn-primary btn-large" id="generateBtn">
                             <i class="fas fa-bolt"></i> Generate Code
                         </button>
-                    </a>    
-                </div>
+                    </div>
+                </form>
             </div>
         </main>
     </div>

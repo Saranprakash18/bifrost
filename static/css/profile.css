@@ -1,38 +1,66 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* Profile Page Styles */
+:root {
+    --primary-color: #6c5ce7;
+    --secondary-color: #a29bfe;
+    --text-color: #2d3436;
+    --light-text: #636e72;
+    --background: #f9f9f9;
+    --card-bg: #ffffff;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
 }
 
-.back-btn{
-    display: inline-block;
-    padding: 10px;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-
-/* Base Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
+    background-color: var(--background);
+    color: var(--text-color);
     margin: 0;
-    padding: 0;
-    color: #333;
+    padding: 20px;
+    line-height: 1.6;
 }
 
 .profile-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 30px auto;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     overflow: hidden;
+    padding: 0;
+}
+
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+.back-btn button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.back-btn button:hover {
+    background-color: #5649c0;
+    transform: translateY(-2px);
 }
 
 .profile-header {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,43 +68,40 @@ body {
 
 .profile-header h1 {
     margin: 0;
-    font-size: 24px;
-    color: #2c3e50;
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .profile-actions {
     display: flex;
-    gap: 10px;
+    gap: 15px;
 }
 
 .btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 8px;
     font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s ease;
+    border: none;
 }
 
 .btn-edit {
-    background-color: #6c5ce7;
-    color: white;
-}
-
-.btn-edit:hover {
-    background-color: #4c3cc4;
+    background-color: white;
+    color: var(--primary-color);
 }
 
 .btn-save {
-    background-color: #2ecc71;
+    background-color: #00b894;
     color: white;
 }
 
-.btn-save:hover {
-    background-color: #27ae60;
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-content {
@@ -86,8 +111,7 @@ body {
 }
 
 .profile-image-section {
-    flex: 1;
-    max-width: 250px;
+    flex: 0 0 250px;
 }
 
 .image-container {
@@ -96,11 +120,11 @@ body {
     height: 200px;
     border-radius: 50%;
     overflow: hidden;
-    border: 5px solid #ecf0f1;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 5px solid #f1f1f1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.image-container img {
+#profile-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -111,26 +135,30 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     color: white;
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: var(--transition);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
 }
 
 .image-container:hover .image-overlay {
     opacity: 1;
 }
 
+.image-overlay i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
 .profile-details {
-    flex: 2;
+    flex: 1;
 }
 
 .form-group {
@@ -141,26 +169,28 @@ body {
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #7f8c8d;
+    color: var(--light-text);
 }
 
 .form-group input {
     width: 100%;
-    padding: 10px 15px;
+    padding: 12px 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
-    transition: border 0.3s ease;
+    transition: var(--transition);
+    background-color: #f8f9fa;
 }
 
 .form-group input:disabled {
-    background-color: #f9f9f9;
-    color: #555;
+    background-color: #f1f1f1;
+    color: var(--text-color);
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
 }
 
 .password-input {
@@ -174,20 +204,19 @@ body {
     transform: translateY(-50%);
     background: none;
     border: none;
+    color: var(--light-text);
     cursor: pointer;
-    color: #7f8c8d;
 }
 
 .profile-links {
-    padding: 20px 30px;
+    padding: 30px;
     border-top: 1px solid #eee;
 }
 
 .profile-links h3 {
     margin-top: 0;
-    color: #2c3e50;
-    font-size: 18px;
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
+    color: var(--primary-color);
 }
 
 .profile-links ul {
@@ -195,37 +224,43 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
 }
 
-.profile-links li {
-    flex: 1 1 200px;
-}
-
-.profile-links a {
+.profile-links li a {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    color: #6c5ce7;
+    gap: 8px;
+    color: var(--text-color);
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: var(--transition);
 }
 
-.profile-links a:hover {
-    background-color: #f0f7fd;
+.profile-links li a:hover {
+    color: var(--primary-color);
+    background-color: #f5f5f5;
 }
 
-/* Responsive Styles */
+.profile-links li a i {
+    font-size: 18px;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .profile-content {
         flex-direction: column;
     }
     
     .profile-image-section {
-        align-self: center;
-        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+    
+    .profile-links ul {
+        flex-direction: column;
+        gap: 10px;
     }
 }

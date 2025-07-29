@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,4 +16,4 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     #path('generate/', views.generate_code, name='generate_code'),
     path('logout/', views.user_logout, name='logout'),
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

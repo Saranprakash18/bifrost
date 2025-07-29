@@ -51,7 +51,7 @@ body {
 .history-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.75rem;
+    gap: 3.5rem;
 }
 
 /* Card styles */
@@ -64,7 +64,7 @@ body {
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    height: 320px;
+    height: 400px;
     position: relative;
 }
 

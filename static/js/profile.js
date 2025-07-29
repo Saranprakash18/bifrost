@@ -1,15 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
     const editBtn = document.getElementById('edit-btn');
     const saveBtn = document.getElementById('save-btn');
-    const form = document.getElementById('profile-form');
-    const inputs = form.querySelectorAll('input');
-    const showPasswordBtn = document.getElementById('show-password');
-    const passwordInput = document.getElementById('password');
+    const profileForm = document.getElementById('profile-form');
+    const inputs = profileForm.querySelectorAll('input');
     const imageUpload = document.getElementById('image-upload');
     const imageInput = document.getElementById('image-input');
     const profileImage = document.getElementById('profile-image');
+    const showPasswordBtn = document.getElementById('show-password');
+    const passwordInput = document.getElementById('password');
 
-    // Toggle edit mode
+    // Edit Profile Functionality
     editBtn.addEventListener('click', function() {
         inputs.forEach(input => {
             input.disabled = false;
@@ -17,28 +18,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.value = ''; // Clear the password placeholder when editing
             }
         });
+        
         editBtn.style.display = 'none';
-        saveBtn.style.display = 'inline-flex';
+        saveBtn.style.display = 'flex';
     });
 
-    // Save changes
-    saveBtn.addEventListener('click', function() {
-        // Here you would typically send the data to your backend
-        // For now, we'll just simulate a save
-        alert('Profile updated successfully!');
-        inputs.forEach(input => {
-            input.disabled = true;
-            if(input.id === 'password' && input.value === '') {
-                input.value = '********'; // Reset password placeholder
-            }
-        });
-        saveBtn.style.display = 'none';
-        editBtn.style.display = 'inline-flex';
+    // Image Upload Functionality
+    imageUpload.addEventListener('click', function() {
+        imageInput.click();
     });
 
-    // Toggle password visibility
+    imageInput.addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                profileImage.src = event.target.result;
+                // Here you would typically upload the image to your server
+            };
+            
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    // Show Password Toggle
     showPasswordBtn.addEventListener('click', function() {
-        if(passwordInput.type === 'password') {
+        if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
             showPasswordBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
         } else {
@@ -47,19 +52,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle image upload
-    imageUpload.addEventListener('click', function() {
-        imageInput.click();
+    // Form Submission (would be handled by Django in production)
+    profileForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Here you would send the form data to your Django backend
+        alert('Profile updated successfully!');
+        
+        // Disable inputs after saving
+        inputs.forEach(input => input.disabled = true);
+        editBtn.style.display = 'flex';
+        saveBtn.style.display = 'none';
     });
 
-    imageInput.addEventListener('change', function(e) {
-        if(e.target.files && e.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                profileImage.src = event.target.result;
-                // Here you would typically upload the image to your backend
-            };
-            reader.readAsDataURL(e.target.files[0]);
-        }
+    // Save button click triggers form submission
+    saveBtn.addEventListener('click', function() {
+        profileForm.dispatchEvent(new Event('submit'));
     });
 });

@@ -166,4 +166,4 @@ SESSION_SAVE_EVERY_REQUEST = True  # optional: reset session timer on every requ
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-login_url = '/'
+LOGIN_URL = '/login/'

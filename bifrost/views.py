@@ -14,7 +14,12 @@ import os
 import tempfile
 import cv2
 import numpy as np
-
+from bifrost.image_processor import (
+    process_uploaded_image
+)
+import traceback
+from django.conf import settings
+import tempfile
 
 # Home page
 def index(request):
@@ -120,11 +125,22 @@ def templates(request):
 
 def history(request):
     uploads = UploadHistory.objects.filter(user=request.user).order_by('-created_at')
+
+    for upload in uploads:
+        # Inject a new field 'thumbnail_url' using Cloudinary transformations
+        original_url = upload.cloud_image_url
+        if "/upload/" in original_url:
+            # 300x200, auto crop/fit
+            thumbnail_url = original_url.replace("/upload/", "/upload/w_300,h_200,c_fit/")
+        else:
+            thumbnail_url = original_url  # fallback in case Cloudinary format changes
+        upload.thumbnail_url = thumbnail_url  # dynamically attach
+
     context = {
         'uploads': uploads,
         'has_uploads': uploads.exists()
     }
-    return render(request, 'frontend/history.html',context)
+    return render(request, 'frontend/history.html', context)
 
 def help(request):
     return render(request, 'frontend/help.html')
@@ -143,29 +159,25 @@ def user_logout(request):
 
 @login_required
 def handle_upload(request):
-    if request.method == 'POST':
-        # Get form data
-        uploaded_file = request.FILES.get('image')
+    if request.method == 'POST' and request.FILES.get('image'):
+        uploaded_file = request.FILES['image']
         framework = request.POST.get('framework', 'vanilla')
         css_type = request.POST.get('css_type', 'external')
-        
-        if not uploaded_file:
-            messages.error(request, "Please upload an image")
-            return redirect('dashboard')
 
-        # Generate unique filename for Cloudinary
-        unique_id = str(uuid.uuid4())[:8]
-        cloud_filename = f"{request.user.username}_{unique_id}.png"
+        # Input validation
+        if framework not in ['vanilla', 'react']:
+            framework = 'vanilla'
+        if css_type not in ['external', 'inline']:
+            css_type = 'external'
 
-        # Save to Cloudinary
-        cloud_storage = MediaCloudinaryStorage()
-        cloudinary_file = cloud_storage.save(cloud_filename, uploaded_file)
-        cloud_url = cloud_storage.url(cloudinary_file)
+        temp_path = None
 
-        # Process image with OpenCV and EasyOCR
         try:
-            # Save uploaded file temporarily
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
+            # Save file temporarily
+            temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
+            os.makedirs(temp_dir, exist_ok=True)
+            
+            with tempfile.NamedTemporaryFile(delete=False, dir=temp_dir, suffix=".png") as temp_file:
                 for chunk in uploaded_file.chunks():
                     temp_file.write(chunk)
                 temp_path = temp_file.name
@@ -173,87 +185,51 @@ def handle_upload(request):
             # Read image
             image = cv2.imread(temp_path)
             if image is None:
-                raise ValueError("Could not read image file")
+                messages.error(request, "Invalid image file")
+                return redirect('dashboard')
 
-            # Initialize OCR reader
-            reader = easyocr.Reader(['en'])
+            # 🔥 One-stop image processing
+            processed = process_uploaded_image(temp_path, framework, css_type)
 
-            # Preprocess image
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            _, thresh = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY_INV)
-            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            # Upload to Cloudinary
+            cloud_storage = MediaCloudinaryStorage()
+            username = request.user.username
+            cloud_filename = f"user_uploads/{username}_{uploaded_file.name}"
+            
+            with open(temp_path, 'rb') as f:
+                cloudinary_file = cloud_storage.save(cloud_filename, f)
+                cloud_url = cloud_storage.url(cloudinary_file)
 
-            # Generate HTML/CSS from detected elements
-            html_elements = []
-            css_elements = []
-            ocr_texts = []
-
-            for idx, cnt in enumerate(contours):
-                x, y, w, h = cv2.boundingRect(cnt)
-                if w < 30 or h < 20:  # Skip small elements
-                    continue
-
-                # Crop element and perform OCR
-                cropped = image[y:y+h, x:x+w]
-                text_results = reader.readtext(cropped, detail=0)
-                element_text = ' '.join(text_results).strip() or f"Element-{idx+1}"
-                ocr_texts.append(element_text)
-
-                # Determine element type based on dimensions and text
-                if w > 100 and h < 60 and any(word in element_text.lower() for word in ['button', 'btn', 'click']):
-                    html = f'<button class="element-{idx}">{element_text}</button>'
-                elif w > 100 and h < 40:
-                    html = f'<input type="text" class="element-{idx}" placeholder="{element_text}">'
-                else:
-                    html = f'<div class="element-{idx}">{element_text}</div>'
-
-                # Generate corresponding CSS
-                css = f""".element-{idx} {{
-                    position: absolute;
-                    left: {x}px;
-                    top: {y}px;
-                    width: {w}px;
-                    height: {h}px;
-                    border: 1px solid #000;
-                }}"""
-
-                html_elements.append(html)
-                css_elements.append(css)
-
-            # Combine all generated code
-            html_code = "<!-- Auto-generated HTML -->\n" + "\n".join(html_elements)
-            css_code = "/* Auto-generated CSS */\n" + "\n".join(css_elements)
-            js_code = "// Auto-generated JavaScript\nconsole.log('Page generated from image');"
-            ocr_text = "\n".join(ocr_texts)
-
-            # Create history record
+            # Save to database
             upload = UploadHistory.objects.create(
                 user=request.user,
                 cloud_image_url=cloud_url,
+                html_code=processed["html_code"],
+                css_code="",  # If you want to store CSS/JS, return them from process_uploaded_image()
+                js_code="",
                 framework_type=framework,
                 css_style=css_type,
-                html_code=html_code,
-                css_code=css_code,
-                js_code=js_code,
-                ocr_text=ocr_text
+                ocr_text="\n".join([t['text'] for t in processed['texts']])
             )
 
-            # Clean up temp file
-            try:
-                os.remove(temp_path)
-            except Exception as e:
-                print(f"Warning: Could not delete temp file: {e}")
-
-            # Redirect to result page
             return redirect('result_page', upload_id=upload.id)
 
         except Exception as e:
-            print(f"Error processing image: {e}")
-            messages.error(request, f"Error processing image: {str(e)}")
+            traceback.print_exc()
+            messages.error(request, f"Processing error: {str(e)}")
             return redirect('dashboard')
 
+        finally:
+            if temp_path and os.path.exists(temp_path):
+                try:
+                    os.remove(temp_path)
+                except Exception as e:
+                    print(f"Error deleting temp file: {e}")
+
+    messages.error(request, "No image uploaded")
     return redirect('dashboard')
 
+    
 @login_required
 def result_page(request, upload_id):
     try:

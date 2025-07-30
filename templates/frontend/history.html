@@ -23,7 +23,7 @@
             {% for upload in uploads %}
             <div class="history-card" data-upload-id="{{ upload.id }}">
                 <div class="card-image">
-                    <img src="{{ upload.cloud_image_url }}" alt="Uploaded design" loading="lazy">
+                    <img src="{{ upload.thumbnail_url }}" alt="Uploaded design" loading="lazy">
                     <div class="card-overlay"></div>
                 </div>
                 <div class="card-details">
@@ -49,7 +49,6 @@
         {% else %}
         <div class="empty-state">
             <div class="empty-content">
-                <img src="{% static 'history/empty.svg' %}" alt="No uploads yet" class="empty-icon">
                 <h2>Your history is empty</h2>
                 <p>Convert your first design and it will appear here</p>
                 <a href="/dashboard" class="btn-primary">Start Converting</a>

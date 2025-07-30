@@ -5,32 +5,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result | BIFROST</title>
-    <link rel="stylesheet" href="{% static 'css/result.css' %}?v=1.0">
+    <link rel="stylesheet" href="{% static 'css/result.css' %}?v=1.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <style>
+        /* Fallback styles if CDN fails */
+        .hljs { display: block; overflow-x: auto; padding: 0.5em; background: #282c34; color: #abb2bf; }
+        .hljs-keyword, .hljs-operator { color: #c678dd; }
+        .hljs-tag, .hljs-name { color: #e06c75; }
+        .hljs-attr { color: #d19a66; }
+        .hljs-string { color: #98c379; }
+    </style>
 </head>
 <body>
     <div class="result-container">
         <div class="original-image">
-            <h2>Original Design</h2>
-            <img src="{{ image_url }}" alt="Uploaded design" class="preview-image">
+            <div class="image-header">
+                <h2>Original Design</h2>
+                <div class="image-actions">
+                    <button id="zoom-in" class="icon-btn" title="Zoom In">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
+                    <button id="zoom-out" class="icon-btn" title="Zoom Out">
+                        <i class="fas fa-search-minus"></i>
+                    </button>
+                    <button id="fullscreen" class="icon-btn" title="Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="image-wrapper">
+                <img src="{{ image_url }}" alt="Uploaded design" class="preview-image" id="design-preview">
+            </div>
         </div>
 
         <div class="code-section">
-            <div class="code-tabs">
-                <button class="tab-btn active" data-tab="html">
-                    <i class="fab fa-html5"></i> HTML
-                </button>
-                <button class="tab-btn" data-tab="css">
-                    <i class="fab fa-css3-alt"></i> CSS
-                </button>
-                <button class="tab-btn" data-tab="js">
-                    <i class="fab fa-js"></i> JavaScript
-                </button>
+            <div class="code-header">
+                <div class="code-tabs">
+                    <button class="tab-btn active" data-tab="html">
+                        <i class="fab fa-html5"></i> HTML
+                    </button>
+                    <button class="tab-btn" data-tab="css">
+                        <i class="fab fa-css3-alt"></i> CSS
+                    </button>
+                    <button class="tab-btn" data-tab="js">
+                        <i class="fab fa-js"></i> JavaScript
+                    </button>
+                    <button class="tab-btn" data-tab="preview">
+                        <i class="fas fa-eye"></i> Live Preview
+                    </button>
+                </div>
+                <div class="code-actions">
+                    <button class="icon-btn" id="toggle-wrap" title="Toggle Word Wrap">
+                        <i class="fas fa-text-width"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="code-content">
-                <div class="hero">TEST DIV</div>
                 <div id="html" class="tab-content active">
                     <pre><code class="language-html">{{ html_code|safe }}</code></pre>
                 </div>
@@ -40,18 +73,28 @@
                 <div id="js" class="tab-content">
                     <pre><code class="language-js">{{ js_code|safe }}</code></pre>
                 </div>
+                <div id="preview" class="tab-content">
+                    <iframe srcdoc='
+                        <style>{{ css_code|safe }}</style>
+                        {{ html_code|safe }}
+                        <script>{{ js_code|safe }}</script>
+                    '></iframe>
+                </div>
             </div>
         </div>
 
         <div class="actions">
-            <button id="copy-html" class="copy-btn">
+            <button id="copy-html" class="copy-btn" data-target="html">
                 <i class="far fa-copy"></i> Copy HTML
             </button>
-            <button id="copy-css" class="copy-btn">
+            <button id="copy-css" class="copy-btn" data-target="css">
                 <i class="far fa-copy"></i> Copy CSS
             </button>
-            <button id="copy-js" class="copy-btn">
+            <button id="copy-js" class="copy-btn" data-target="js">
                 <i class="far fa-copy"></i> Copy JS
+            </button>
+            <button id="download-all" class="btn-primary">
+                <i class="fas fa-download"></i> Download All
             </button>
             <a href="/dashboard" class="btn-primary">
                 <i class="fas fa-redo"></i> Convert Another
@@ -59,6 +102,22 @@
         </div>
     </div>
 
-    <script src="{% static 'js/result.js' %}?v=1.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        // Inline fallback for JSZip if CDN fails
+        function loadJSZip() {
+            return new Promise((resolve, reject) => {
+                if (window.JSZip) return resolve();
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+    <script src="{% static 'js/result.js' %}?v=1.1"></script>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>

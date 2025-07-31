@@ -20,6 +20,7 @@ from bifrost.image_processor import (
 import traceback
 from django.conf import settings
 import tempfile
+import requests
 
 # Home page
 def index(request):
@@ -188,7 +189,7 @@ def handle_upload(request):
                 messages.error(request, "Invalid image file")
                 return redirect('dashboard')
 
-            # 🔥 One-stop image processing
+            # One-stop image processing
             processed = process_uploaded_image(temp_path, framework, css_type)
 
             # Upload to Cloudinary
@@ -216,8 +217,12 @@ def handle_upload(request):
 
         except Exception as e:
             traceback.print_exc()
-            messages.error(request, f"Processing error: {str(e)}")
+            if isinstance(e, requests.exceptions.ConnectionError):
+                messages.error(request, "Connect Internet!")
+            else:
+                messages.error(request, f"Processing error: {str(e)}")
             return redirect('dashboard')
+
 
         finally:
             if temp_path and os.path.exists(temp_path):

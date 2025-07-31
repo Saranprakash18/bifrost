@@ -4,40 +4,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Templates | BIFROST</title>
-    <link rel="stylesheet" href="{% static 'css/templates.css' %}">
+    <title>BIFROST | Template Gallery</title>
+    <link rel="stylesheet" href="{% static 'css/templates.css' %}?v=1.2">
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="{% static 'js/templates.js' %}" defer></script>
 </head>
 <body>
-    <header class="navbar">
-        <div class="navbar-container">
-            <a href="{% url 'dashboard' %}">
-                <button style="
-                    background-color: #6c5ce7;
-                    color: white;
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                    transition: background-color 0.3s ease, transform 0.2s ease;">
-                    Back
-                </button>
-            </a>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search templates...">
-                <button id="searchButton" class="search-button">
+    <!-- Top Navbar -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{% static 'images/logo.png' %}" alt="BIFROST" class="logo-img">
+                <h1 class="logo-text">BIFROST <span>Templates</span></h1>
+            </div>
+            <div class="nav-actions">
+                <div class="search-box">
                     <i class="fas fa-search"></i>
-                </button>
+                    <input type="text" placeholder="Search templates...">
+                </div>
+                <div class="user-menu">
+                    <img src="{% static 'images/user-avatar.jpg' %}" alt="User" class="user-avatar">
+                </div>
             </div>
         </div>
     </header>
 
-    <main class="templates-container">
-        <h1>Project Templates</h1>
-    </main>
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar">
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <ul class="filter-list">
+                    <li class="active"><a href="#" data-category="all">All Templates</a></li>
+                    <li><a href="#" data-category="dashboard">Dashboards</a></li>
+                    <li><a href="#" data-category="ecommerce">E-commerce</a></li>
+                    <li><a href="#" data-category="auth">Authentication</a></li>
+                    <li><a href="#" data-category="landing">Landing Pages</a></li>
+                    <li><a href="#" data-category="admin">Admin Panels</a></li>
+                </ul>
+            </div>
+            <div class="filter-section">
+                <h3>Popular Tags</h3>
+                <div class="tag-cloud">
+                    <a href="#" class="tag">Modern</a>
+                    <a href="#" class="tag">Minimal</a>
+                    <a href="#" class="tag">Dark Mode</a>
+                    <a href="#" class="tag">Responsive</a>
+                    <a href="#" class="tag">Popular</a>
+                </div>
+            </div>
+        </aside>
 
+        <!-- Gallery Section -->
+        <main class="gallery">
+            <div class="gallery-header">
+                <h2>Featured Templates</h2>
+                <div class="sort-options">
+                    <span>Sort by:</span>
+                    <select id="sort-select">
+                        <option value="popular">Most Popular</option>
+                        <option value="recent">Recently Added</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="template-grid">
+                {% for template in templates %}
+                <div class="template-card" data-category="{{ template.category }}" data-id="{{ template.id }}">
+                    <div class="card-image">
+                        <img src="{% static template.image %}" alt="{{ template.name }}" class="template-img">
+                        <div class="card-overlay">
+                            <button class="quick-preview-btn" data-template="{{ template.id }}">
+                                <i class="fas fa-expand"></i> Quick Preview
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="template-meta">
+                            <span class="template-category">{{ template.category }}</span>
+                            <span class="template-rating">
+                                <i class="fas fa-star"></i> {{ template.rating }}
+                            </span>
+                        </div>
+                        <h3 class="template-title">{{ template.name }}</h3>
+                        <p class="template-desc">{{ template.description }}</p>
+                        <div class="template-actions">
+                            <a href="{{ template.preview_url }}" class="btn preview-btn" target="_blank">
+                                <i class="fas fa-eye"></i> Preview
+                            </a>
+                            <a href="{% url 'template_result' template.id %}" class="btn use-btn">
+                                <i class="fas fa-bolt"></i> Use Template
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Preview Modal -->
+    <div class="preview-modal" id="previewModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-body">
+                <img src="" alt="Template Preview" id="modalTemplateImage">
+                <div class="modal-actions">
+                    <a href="#" class="btn use-template-btn" id="modalUseBtn">
+                        <i class="fas fa-bolt"></i> Use This Template
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
 </body>
 </html>

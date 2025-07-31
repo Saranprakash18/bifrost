@@ -57,10 +57,11 @@ class UploadHistory(models.Model):
     framework_type = models.CharField(max_length=50, choices=FRAMEWORK_CHOICES, default='plain')
     css_style = models.CharField(max_length=50, choices=CSS_STYLE_CHOICES, default='external')
     created_at = models.DateTimeField(auto_now_add=True)
-    html_code = models.TextField()
-    css_code = models.TextField()
-    js_code = models.TextField()
-    ocr_text = models.TextField()
+    html_code = models.TextField(default='', blank=True) 
+    css_code = models.TextField(default='', blank=True)  
+    js_code = models.TextField(default='', blank=True)   
+    ocr_text = models.TextField(default='', blank=True)  
+    
 
     def __str__(self):
         return f"{self.user.username}'s upload on {self.created_at.strftime('%Y-%m-%d')}"

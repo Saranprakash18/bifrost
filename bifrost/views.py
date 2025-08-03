@@ -161,90 +161,93 @@ def user_logout(request):
 @login_required
 def handle_upload(request):
     if request.method == 'POST' and request.FILES.get('image'):
-        uploaded_file = request.FILES['image']
-        framework = request.POST.get('framework', 'vanilla')
-        css_type = request.POST.get('css_type', 'external')
-
-        # Input validation
-        if framework not in ['vanilla', 'react']:
-            framework = 'vanilla'
-        if css_type not in ['external', 'inline']:
-            css_type = 'external'
-
-        temp_path = None
-
         try:
-            # Save file temporarily
+            # Get upload parameters
+            uploaded_file = request.FILES['image']
+            framework = request.POST.get('framework', 'vanilla')
+            css_type = request.POST.get('css_type', 'external')
+            
+            # Validate inputs
+            if framework not in ['vanilla', 'react']:
+                framework = 'vanilla'
+            if css_type not in ['external', 'inline']:
+                css_type = 'external'
+            
+            # Create temp directory if not exists
             temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp')
             os.makedirs(temp_dir, exist_ok=True)
             
-            with tempfile.NamedTemporaryFile(delete=False, dir=temp_dir, suffix=".png") as temp_file:
+            # Save to temp file
+            temp_path = None
+            with tempfile.NamedTemporaryFile(
+                delete=False, 
+                dir=temp_dir, 
+                suffix=os.path.splitext(uploaded_file.name)[1]
+            ) as temp_file:
                 for chunk in uploaded_file.chunks():
                     temp_file.write(chunk)
                 temp_path = temp_file.name
-
-            # Read image
-            image = cv2.imread(temp_path)
-            if image is None:
-                messages.error(request, "Invalid image file")
-                return redirect('dashboard')
-
-            # One-stop image processing
-            processed = process_uploaded_image(temp_path, framework, css_type)
-
-            # Upload to Cloudinary
+            
+            # Process image
+            result = process_uploaded_image(temp_path, framework, css_type)
+            if not result.get('success'):
+                raise Exception(result.get('error', 'Image processing failed'))
+            
+            # Upload to cloud storage
             cloud_storage = MediaCloudinaryStorage()
-            username = request.user.username
-            cloud_filename = f"user_uploads/{username}_{uploaded_file.name}"
+            cloud_filename = f"user_uploads/{request.user.username}_{uploaded_file.name}"
             
             with open(temp_path, 'rb') as f:
                 cloudinary_file = cloud_storage.save(cloud_filename, f)
                 cloud_url = cloud_storage.url(cloudinary_file)
-
+            
             # Save to database
             upload = UploadHistory.objects.create(
                 user=request.user,
                 cloud_image_url=cloud_url,
-                html_code=processed["html_code"],
-                css_code="",  # If you want to store CSS/JS, return them from process_uploaded_image()
-                js_code="",
+                html_code=result['html_code'],
+                css_code=result['css_code'],
+                js_code=result['js_code'],
                 framework_type=framework,
                 css_style=css_type,
-                ocr_text="\n".join([t['text'] for t in processed['texts']])
+                ocr_text="\n".join([t['text'] for t in result.get('text_blocks', [])])
             )
-
+            
             return redirect('result_page', upload_id=upload.id)
-
+            
         except Exception as e:
             traceback.print_exc()
-            if isinstance(e, requests.exceptions.ConnectionError):
-                messages.error(request, "Connect Internet!")
-            else:
-                messages.error(request, f"Processing error: {str(e)}")
+            messages.error(request, f"Processing error: {str(e)}")
             return redirect('dashboard')
-
-
+            
         finally:
+            # Clean up temp file
             if temp_path and os.path.exists(temp_path):
                 try:
                     os.remove(temp_path)
-                except Exception as e:
-                    print(f"Error deleting temp file: {e}")
+                except:
+                    pass
 
     messages.error(request, "No image uploaded")
     return redirect('dashboard')
 
-    
 @login_required
 def result_page(request, upload_id):
     try:
         upload = UploadHistory.objects.get(id=upload_id, user=request.user)
-        return render(request, 'frontend/result.html', {
+        
+        # Prepare context with proper code formatting
+        context = {
             'html_code': upload.html_code,
             'css_code': upload.css_code,
             'js_code': upload.js_code,
-            'image_url': upload.cloud_image_url
-        })
+            'image_url': upload.cloud_image_url,
+            'framework': upload.framework_type,
+            'css_type': upload.css_style
+        }
+        
+        return render(request, 'frontend/result.html', context)
+        
     except UploadHistory.DoesNotExist:
         messages.error(request, "Result not found")
         return redirect('dashboard')

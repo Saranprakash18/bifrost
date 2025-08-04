@@ -25,6 +25,6 @@ BIFROST is a web-based tool that converts UI/UX design images (JPG/PNG) into usa
 - **Backend:** Django (Python)
 - **Image Processing:** EasyOCR, OpenCV
 - **Cloud Storage:** Cloudinary
-- **Database:** SQLite (or PostgreSQL)
+- **Database:** MYSQL
 
 

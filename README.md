@@ -29,7 +29,7 @@ BIFROST is a web-based tool that converts UI/UX design images (JPG/PNG) into usa
 
 ---
 
-## PPT Link
+## DEMO PPT Link
 
 https://www.canva.com/design/DAG1LjvMG7Y/faolvz6o3rrakPDV_z_oBA/edit?utm_content=DAG1LjvMG7Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 
